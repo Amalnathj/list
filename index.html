@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Cards - Equal Size Layout</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-100 p-8">
+
+  <h1 class="text-3xl font-bold text-center mb-10 text-gray-800">Listing of User</h1>
+
+  
+  <div id="userRows" class="space-y-12"></div>
+
+  <script>
+    async function loadUsers() {
+      try {
+        const res = await fetch("https://dummyjson.com/users");
+        const data = await res.json();
+
+        const users = data.users;
+        const container = document.getElementById("userRows");
+        container.innerHTML = "";
+
+        
+        const ratios = [4, 5, 3, 2];
+        let userIndex = 0;
+
+        ratios.forEach(ratio => {
+         
+          const row = document.createElement("div");
+          row.className = `grid gap-10 grid-cols-${ratio}`;
+
+          for (let i = 0; i < ratio && userIndex < users.length; i++) {
+            const user = users[userIndex];
+
+            const card = document.createElement("div");
+            card.className =
+              "bg-white rounded-2xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition duration-300 flex flex-col justify-between";
+
+            
+            card.style.width = "250px";
+            card.style.height = "250px";
+
+            card.innerHTML = `
+              <div>
+                <h2 class="text-lg font-semibold text-gray-900 mb-2">👤 ${user.firstName} ${user.lastName}</h2>
+                <p class="text-gray-700 text-sm"><span class="font-medium"> Address:</span> ${user.address.city}</p>
+                <p class="text-gray-700 text-sm"><span class="font-medium"> Company:</span> ${user.company.name}</p>
+                <p class="text-gray-700 text-sm"><span class="font-medium"> Email:</span> ${user.email}</p>
+                <p class="text-gray-700 text-sm"><span class="font-medium"> Gender:</span> ${user.gender}</p>
+              </div>
+            
+            `;
+
+            row.appendChild(card);
+            userIndex++;
+          }
+
+          container.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Error loading users:", error);
+      }
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>
